@@ -6,8 +6,15 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-if (isset($_GET['url'])) {
-    $pokemonUrl = $_GET['url'];
-    $info = json_decode(file_get_contents($pokemonUrl), true);
-} 
+$info = null;
+$apiRequestLogs = [];
 
+if (isset($_GET['url'])) {
+    require_once __DIR__ . '/../helpers/api_helper.php';
+    $pokemonUrl = $_GET['url'];
+    $respuesta = fetchPokeApi($pokemonUrl, 'Detalle Pokémon');
+    $apiRequestLogs[] = $respuesta['log'];
+    if ($respuesta['data']) {
+        $info = $respuesta['data'];
+    }
+}
